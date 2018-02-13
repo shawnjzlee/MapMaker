@@ -10,6 +10,9 @@ all: $(SOURCES) $(EXECUTABLE)
 
 debug: CFLAGS += -DDEBUG -g
 debug: $(EXECUTABLE)
+
+bench: CFLAGS += -DBENCH
+bench: $(EXECUTABLE)
     
 $(EXECUTABLE): $(OBJECTS) copy
 	mkdir -p $(BUILD_DIR)

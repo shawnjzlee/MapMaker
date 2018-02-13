@@ -69,7 +69,18 @@ int main(int argc, char * argv[]) {
     uint constraint(flags.get<uint>("constraint"));
     uint ceiling = get_ceiling(constraint);
     
+    #ifdef BENCH
+    auto start = std::chrono::high_resolution_clock::now();
+    #endif
+    
     uint count = find_valid_points(ceiling, constraint);
+    
+    #ifdef BENCH
+    auto end = std::chrono::high_resolution_clock::now();
+    auto runtime = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+    
+    std::cout << "John took " << runtime.count() << "s to calculate all valid points.\n";
+    #endif
     
     std::cout << "John can safely access " << count << " points on the map, given that he starts at (0,0).\n";
 }
