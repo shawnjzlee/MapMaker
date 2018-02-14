@@ -11,3 +11,25 @@ If John steps on a mine he will die. John cannot jump over the mines, so he must
 Given the digit sum is the absolute value of the coordinate system, we can simply calculate the number of valid points in one quadrant and multiply that value by 4. We will then remove the overlapping points (those at the axis) to get our final answer.
 
 Our program will use unsigned values, and perform calculations in Quadrant I.
+
+## Usage via Makefile
+
+#### In `/src` directory:
+
+To compile:
+
+- prereq: `mapmaker` requires g++ 5.x and c++14 to compile and run.
+- `make` will compile the program with all of the following flags `-pthread -lpthread -c -std=c++14 -Wall -Werror`, and put the program in the `/bin` directory.
+- `make debug` will compile with the flags listed above, as well as `-debug -g` for debugging with, e.g., `gdb`.
+- `make bench` will compile with the `#ifdef BENCH` preprocessors in the code, which will benchmark and output the runtime of the program.
+
+To run:
+
+- `make test` will run the program serially with default constraint value. 
+- `make test_c ARG1=[constraint]` will run the program serially with constraint value passed in as an argument.
+- `make test_t ARG1=[num_threads]` will run the program concurrently with number of threads passed in as an argument.
+- `make test_d` will run the program serially with default constraint value in `gdb`.
+- `make test_cd ARG1=[constraint]` will run with `_c` and `_d` combined. 
+- `make test_ct ARG1=[num_threads]` will run with `_c` and `_t` combined. 
+- `make test_td ARG1=[num_threads]` will run with `_t` and `_d` combined.
+- `make test_ctd ARG1=[constraint] ARG2=[num_threads]` will run with `_c`, `_t`, and `_d` combined.
