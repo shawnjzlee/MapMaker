@@ -1,7 +1,7 @@
 CC=g++-5
-CFLAGS=-c -std=c++14
+CFLAGS=-c -std=c++14 -Wall -Werror
 LDFLAGS=-pthread -lpthread
-SOURCES=main.cpp
+SOURCES=main.cpp mapmaker.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=mapmaker
 BUILD_DIR=./bin
@@ -34,6 +34,9 @@ test:
 
 test_c:
 	cd bin/ && ./mapmaker -c ${ARG1}
+	
+test_t:
+	cd bin/ && ./mapmaker -t ${ARG1}
 
 test_d:
 	make debug && cd bin/ && gdb --args ./mapmaker
@@ -41,12 +44,11 @@ test_d:
 test_cd:
 	make debug && cd bin/ && gdb --args ./mapmaker -c ${ARG1}
 	
-restart:
-	cd .. && make && cd bin/ && ./mapmaker
-
-restart_d:
-	cd .. && make debug && cd bin/ && gdb --args ./mapmaker
-
-restart_ctd:
-	cd .. && make debug && cd bin/ && gdb --args ./mapmaker -c ${ARG1} -t ${ARG2}
+test_ct:
+	cd bin/ && ./mapmaker -c ${ARG1} -t ${ARG2}
 	
+test_td:
+	make debug && cd bin/ && gdb --args ./mapmaker -t ${ARG1}
+	
+test_ctd:
+	make debug && cd bin/ && gdb --args ./mapmaker -c ${ARG1} -t ${ARG2}
