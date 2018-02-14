@@ -8,7 +8,7 @@
 #include "global.h"
 #include "./lib/cmdline.h"
 
-std::map<int, std::unique_ptr<std::mutex>> mutex_map;
+std::map<int, std::vector<std::mutex>> mutex_map;
 std::vector<std::vector<short>> valid_cells;
 pthread_barrier_t barrier_threshold;
 std::mutex mutex_updated;
@@ -76,6 +76,8 @@ int main(int argc, char * argv[]) {
     const uint work_per_thread = ceiling / num_threads;
     const uint remaining_work = ceiling % num_threads;
     
+    std::vector<std::mutex> mutex(ceiling);
+    
     for (uint i = 0; i < ceiling; i++)
         valid_cells.push_back(std::vector<short>(ceiling, 0));
     
@@ -86,8 +88,8 @@ int main(int argc, char * argv[]) {
         uint chunksize = (tid < remaining_work) ? work_per_thread + 1 : work_per_thread;
         
         if (tid) {
-            mutex_map.emplace(offset, std::make_unique<std::mutex>()).first;
-            mutex_map.emplace(offset+1, std::make_unique<std::mutex>()).first;
+            mutex_map.emplace(offset, std::vector<std::mutex>(ceiling));
+            mutex_map.emplace(offset+1, std::vector<std::mutex>(ceiling));
         }
         
         if (tid) 

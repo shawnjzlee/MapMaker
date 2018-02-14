@@ -7,7 +7,7 @@
 #include <mutex>
 #include <pthread.h>
 
-extern std::map<int, std::unique_ptr<std::mutex>> mutex_map;
+extern std::map<int, std::vector<std::mutex>> mutex_map;
 extern std::vector<std::vector<short>> valid_cells;
 extern pthread_barrier_t barrier_threshold;
 extern std::mutex mutex_updated;

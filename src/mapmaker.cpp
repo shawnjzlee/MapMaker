@@ -56,8 +56,8 @@ void MapMaker::set_contraint(unsigned int constraint) {
 void MapMaker::get_valid_points() {
     // used for last else-if below to lock_guard for neighbor checking
     auto check = [this](std::vector<std::vector<short>>& valid_cells, int x, int y) {
-        std::lock_guard<std::mutex> lock(*(mutex_map.at(x-1))); {
-            std::lock_guard<std::mutex> lock(*(mutex_map.at(x))); {
+        std::lock_guard<std::mutex> lock(mutex_map[x-1][y]); {
+            std::lock_guard<std::mutex> lock(mutex_map[x][y-1]); {
                 return (valid_cells[x-1][y] == 1 || valid_cells[x][y-1] == 1);
             }
         }
@@ -83,7 +83,7 @@ void MapMaker::get_valid_points() {
                 }
                 // else if cell is accessible from a neighbor within shared boundaries
                 else if (check(valid_cells, x, y)) {
-                    std::lock_guard<std::mutex> lock(*(mutex_map.at(x)));
+                    std::lock_guard<std::mutex> lock(mutex_map[x][y]);
                     valid_cells[x][y] = 1;
                     local_update = true;
                     local_count++;
