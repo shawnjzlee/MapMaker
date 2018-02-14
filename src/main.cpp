@@ -43,7 +43,7 @@ void get_points(MapMaker &data) {
         pthread_barrier_wait (&barrier_threshold);
     } while(updated);
     
-    // pthread_barrier_wait (&barrier_threshold);
+    pthread_barrier_wait (&barrier_threshold);
     #ifdef BENCH
     std::chrono::high_resolution_clock::time_point end;
     if (data.get_thread_id() == 0) {
@@ -72,9 +72,9 @@ int main(int argc, char * argv[]) {
     for (uint tid = 0; tid < num_threads; ++tid)
         thread_data.at(tid).thread_data_init(tid, constraint);
     
-    uint ceiling = thread_data.at(0).get_ceiling();
-    uint work_per_thread = ceiling / num_threads;
-    uint remaining_work = ceiling % num_threads;
+    const uint ceiling = thread_data.at(0).get_ceiling();
+    const uint work_per_thread = ceiling / num_threads;
+    const uint remaining_work = ceiling % num_threads;
     
     for (uint i = 0; i < ceiling; i++)
         valid_cells.push_back(std::vector<short>(ceiling, 0));
@@ -112,9 +112,10 @@ int main(int argc, char * argv[]) {
             get_points(thread_data.at(tid));
     }
     
-    pthread_barrier_destroy(&barrier_threshold);
     if (num_threads != 1)
         for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
+    
+    pthread_barrier_destroy(&barrier_threshold);
         
     int raw_count = get_raw_count(thread_data);
     int count = (raw_count * 4) - (ceiling * 4) + 1;
