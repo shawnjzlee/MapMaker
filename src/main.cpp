@@ -69,14 +69,24 @@ int main(int argc, char * argv[]) {
     
     std::vector<std::thread> threads(num_threads);
     std::vector<MapMaker> thread_data(num_threads);
+    
+    if (num_threads > std::thread::hardware_concurrency()) {
+        std::cout << "Too many threads requested, setting to maximum supported concurrent threads in your system"
+            << " (" << std::thread::hardware_concurrency() << ")\n";
+        num_threads = std::thread::hardware_concurrency()-1;
+    }
+    
     for (uint tid = 0; tid < num_threads; ++tid)
         thread_data.at(tid).thread_data_init(tid, constraint);
     
     const uint ceiling = thread_data.at(0).get_ceiling();
     const uint work_per_thread = ceiling / num_threads;
     const uint remaining_work = ceiling % num_threads;
-    
-    std::vector<std::mutex> mutex(ceiling);
+
+    if (work_per_thread <= 2) {
+        std::cout << "Please increase the constraint or lower the number of threads\n";
+        return -1;
+    }
     
     for (uint i = 0; i < ceiling; i++)
         valid_cells.push_back(std::vector<short>(ceiling, 0));

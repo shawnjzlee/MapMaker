@@ -33,3 +33,10 @@ To run:
 - `make test_ct ARG1=[num_threads]` will run with `_c` and `_t` combined. 
 - `make test_td ARG1=[num_threads]` will run with `_t` and `_d` combined.
 - `make test_ctd ARG1=[constraint] ARG2=[num_threads]` will run with `_c`, `_t`, and `_d` combined.
+
+Examples:
+
+- `make test_c ARG1=32` will run the program serially with constraint of 32.
+- `make test_t ARG1=3` will run the program with 3 threads
+- `make test_td ARG1=4` will run the program with 3 threads in GDB with --args flag.
+- `make test_ctd ARG1=10 ARG2=5` will run the program in GDB, with a constraint of 10 and 5 threads.
